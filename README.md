@@ -1,35 +1,37 @@
 # Quantitative Crypto Market Analyst & Signal Engine
 
-An autonomous, multi-agent quantitative cryptocurrency market intelligence and advisory system built with LangGraph, Google Gemini, and algorithmic technical indicators. 
+An autonomous, multi-agent quantitative cryptocurrency market intelligence and advisory system built with LangGraph, Google Gemini, and algorithmic technical indicators.
 
-Designed strictly as a non-execution, analytical engine, this platform continuously monitors crypto asset pairs, evaluates multi-timeframe structural trends, processes macroeconomic sentiment, computes directional probabilities, and calculates volatility-adjusted risk levels (ATR). Actionable trading setups meeting strict statistical confidence thresholds are instantly dispatched to Telegram.
+<p align="center">
+  <img src="assets/Visualisasi_Dashboard.png" alt="Quant Trading Dashboard Preview" width="800"/>
+</p>
+
+Designed strictly as a non-execution, analytical engine, this platform continuously monitors crypto asset pairs, evaluates multi-timeframe structural trends, processes macroeconomic sentiment, computes directional probabilities, and calculates volatility-adjusted risk levels (ATR). Actionable trading setups meeting strict statistical confidence thresholds are instantly dispatched to Telegram and visualized on the web dashboard.
 
 ---
 
 ## Technology Stack
 
 ### Programming Language & Runtime
-* **Python 3.10+**: Core runtime environment.
+* **Python 3.11**: Core runtime environment.
 
 ### Multi-Agent Orchestration
-* **LangGraph (`langgraph`)**: Deterministic state machine and directed acyclic graph (DAG) execution framework via `StateGraph` for structured inter-agent data passing.
+* **LangGraph (`langgraph`)**: Deterministic state machine and directed acyclic graph (DAG) execution framework via `StateGraph` for structured inter-agent data flow.
 
 ### Artificial Intelligence & Reasoning
-* **Google GenAI SDK (`google-genai`)**: Integration with Gemini 2.5 Flash for multimodal technical synthesis, candlestick pattern context confirmation, and headline sentiment analysis.
+* **Google GenAI SDK (`google-genai`)**: Integration with Gemini Flash for technical synthesis, market context confirmation, and headline sentiment analysis.
 
 ### Quantitative Analysis & Mathematics
 * **Pandas & NumPy**: Vectorized operations, time-series data cleansing, resampling, and OHLCV matrix calculations.
-* **Technical Analysis Library (`ta`)**: Mathematical computation of core momentum, volatility, and trend indicators including Exponential Moving Averages (EMA), Relative Strength Index (RSI), and Average True Range (ATR).
+* **Technical Analysis Library (`ta`)**: Mathematical computation of core indicators including Exponential Moving Averages (EMA 9/21/50), Relative Strength Index (RSI), and Average True Range (ATR).
 
-### Market Data Ingestion
-* **Twelve Data REST API**: Primary low-latency real-time 1-minute and 15-minute candlestick data feed.
-* **Yahoo Finance (`yfinance`)**: Secondary fallback feed ensuring uninterrupted historical time-series retrieval during API rate limits.
+### Market Data Ingestion & Derivatives
+* **Binance Futures API & Twelve Data**: Real-time market feed, funding rates, and open interest metrics.
+* **Yahoo Finance (`yfinance`)**: Secondary fallback feed ensuring continuous historical time-series retrieval.
 
-### Distribution & Operational Alerting
+### Interface & Operational Alerting
+* **Flask Web Dashboard**: Responsive UI for manual token analysis, interactive charting, and quantitative risk breakdown.
 * **Telegram Bot API**: Programmatic delivery of structured market intelligence reports, trade parameters, and risk sizing via HTTPS POST.
-
-### Environment & Utilities
-* **Python-Dotenv**: Environment variable isolation and secure credential management.
 
 ---
 
@@ -37,10 +39,10 @@ Designed strictly as a non-execution, analytical engine, this platform continuou
 
 * **Pure Advisory Architecture:** Zero order execution risk. The system does not interface with exchange execution endpoints or private trading keys, focusing strictly on data integrity, anomaly detection, and probability quantification.
 * **Dual-Timeframe Quantitative Confluence:**
-  * **15-Minute (15M) Regime Filter:** Identifies overarching trend structure relative to the 50-period Exponential Moving Average (EMA 50).
-  * **1-Minute (1M) Execution Momentum:** Validates short-term momentum triggers via EMA 9/21 crossovers and Fast RSI (9) mean-reversion boundaries.
+  * **Higher Timeframe Regime Filter:** Identifies overarching trend structure relative to EMA 50.
+  * **Lower Timeframe Execution Momentum:** Validates short-term momentum triggers via EMA 9/21 crossovers and Fast RSI mean-reversion boundaries.
 * **Dynamic Volatility & Risk Sizing:** Invalidation levels (Stop Loss), profit targets (Take Profit), and position allocations are calculated dynamically using the 14-period Average True Range (ATR), adapting automatically to shifting market volatility.
-* **Threshold-Gated Dispatch:** Intelligence alerts are triggered only when the quantitative model reaches a confidence score of 60% or higher, eliminating low-probability market noise.
+* **Dual-Channel Distribution:** Real-time visualization via local web dashboard and push notifications dispatched via Telegram Bot.
 
 ---
 
@@ -49,19 +51,19 @@ Designed strictly as a non-execution, analytical engine, this platform continuou
 ```text
                +-------------------------------------------------+
                |             Market Data Ingestion               |
-               |       (Twelve Data API / Yahoo Finance)         |
+               |        (Binance API / Twelve Data / YFinance)   |
                +-------------------------------------------------+
                                         |
                                         v
 +------------------+         +---------------------+         +---------------------+
 |  History Agent   | ------> |     Macro Agent     | ------> |   Technical Agent   |
-|  Fetches 1M/15M  |         |  Scans & Analyzes   |         |  TA Computation &   |
-|  OHLCV Datasets  |         |  News Sentiment     |         |  Gemini Synthesis   |
+|  Fetches Multi-  |         |  Scans & Analyzes   |         |  TA Computation &   |
+|  Timeframe OHLCV |         |  News Sentiment     |         |  Gemini Synthesis   |
 +------------------+         +---------------------+         +---------------------+
                                                                         |
                                                                         v
-+------------------+                                         +---------------------+
-|   Notify Agent   | <-------------------------------------- |     Risk Agent      |
-|  Dispatches to   |           (If Probability >= 60%)       |  Calculates ATR,    |
-|  Telegram Bot    |                                         |  SL, TP & Sizing    |
-+------------------+                                         +---------------------+
++------------------+         +---------------------+         +---------------------+
+|   Notify Agent   | <------ |    Logger Agent     | <------ |     Risk Agent      |
+|  Dispatches to   |         |  Archives Signal to |         |  Calculates ATR,    |
+|  Telegram Bot    |         |  SQLite Database    |         |  SL, TP & Sizing    |
++------------------+         +---------------------+         +---------------------+
